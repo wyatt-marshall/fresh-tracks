@@ -7,7 +7,7 @@ output: Song object
 """
 
 
-class Song:
+class Track:
     
     def __init__(self, api_response):
         self.album = api_response['album']
@@ -31,5 +31,6 @@ class Song:
 
     def __str__(self):
         return f"{self.name}\n{self.artists[0]['name']}\n{self.album['name']}"
+
 
 
