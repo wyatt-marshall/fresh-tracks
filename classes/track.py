@@ -59,6 +59,9 @@ class Track:
         ]
         return artists
 
+    def get_artist(self):
+        return self.get_artists_object()[0]['name']
+
     def get_available_markets(self):
         return self.available_markets
 
@@ -101,8 +104,9 @@ class Track:
 
     # returns True if track is saved by user sp
     def is_saved(self, user):
-        saved = user.sp.current_user_saved_tracks_contains(tracks=[self.id])[0]
-        return saved
+        #saved = user.sp.current_user_saved_tracks_contains(tracks=[self.id])[0]
+        #return saved
+        pass
 
     # returns True if track is found on playlist
     def is_track_on_playlist(self, user, playlist_id):

@@ -11,23 +11,38 @@ from spotipy.oauth2 import SpotifyOAuth
 
 
 class User:
-    
-    def __init__(self, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, SCOPE):
-        self.user = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
-                                                              client_secret=SPOTIPY_CLIENT_SECRET,
-                                                              redirect_uri=SPOTIPY_REDIRECT_URI,
-                                                              scope=SCOPE))
-        self.display_name = self.user.me()['display_name']
 
-        self.id = self.user.me()['id']
+    def __init__(self, SCOPE):
+        self.user = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=SCOPE))
+        self.user_object = self.user.me()
+        self.id = self.user_object['id']
+        self.display_name = self.user_object['display_name']
+        self.external_urls = self.user_object['external_urls']
+        self.followers_object = self.user_object['followers']
+        self.href = self.user_object['href']
+        self.uri = self.user_object['uri']
 
     def __str__(self):
-        display_name = self.display_name
-        return display_name
+        return f"{self.display_name}"
+        
 
-    #def get_user_id(self):
-        #user_id = self.id
-        #return user_id
+    def get_id(self):
+        return self.id
+
+    def get_display_name(self):
+        return self.display_name
+
+    def get_external_urls(self):
+        return self.external_urls
+
+    def get_follower_count(self):
+        return self.followers_object['total']
+
+    def get_href(self):
+        return self.href
+
+    def get_uri(self):
+        return self.uri
 
     #def user_owned_playlist(self, playlist):
         #return self.sp.get

@@ -15,6 +15,8 @@ class TestTrack(unittest.TestCase):
     f.close()
     track = Track(example_track_object)
 
+
+
     
     def test_get_id(self):
         self.assertEqual(self.track.get_id(), '0ntQJM78wzOLVeCUAW7Y45')
@@ -29,7 +31,10 @@ class TestTrack(unittest.TestCase):
         self.assertEqual(self.track.get_album(), 'Only By The Night')
 
     def test_get_artists(self):
-        self.assertEqual(self.track.get_artists(), ['Kings of Leon']) 
+        self.assertEqual(self.track.get_artists(), ['Kings of Leon'])
+
+    def test_get_artist(self):
+        self.assertEqual(self.track.get_artist(), 'Kings of Leon')
 
     def test_get_available_markets(self):
         self.assertEqual(self.track.get_available_markets(), ['AR', 'AU', 'AT', 'BE', 'BO', 'BR', 'BG', 'CA', 'CL', 
@@ -82,6 +87,10 @@ class TestTrack(unittest.TestCase):
     def test_get_uri(self):
         self.assertEqual(self.track.get_uri(), 'spotify:track:0ntQJM78wzOLVeCUAW7Y45')
 
+
+    # turn this test off in Nov. 2023
+    def test_is_saved(self):
+        self.assertTrue(self.track.is_saved())
 
 if __name__ == "__main__":
     unittest.main()
