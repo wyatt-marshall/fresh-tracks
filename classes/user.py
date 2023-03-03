@@ -59,7 +59,7 @@ class User:
 
     # returns list of track ids for all songs that are on user owned playlists
     def get_all_user_owned_tracks(self):
-        playlists = self.sp.current_user_playlists()
+        playlists = self.user.current_user_playlists()
         all_track_ids = []
         while playlists:
             for playlist in playlists['items']:
@@ -73,6 +73,72 @@ class User:
             else:
                 playlists = None
         return all_track_ids
+
+    def get_user_owned_playlists(self):
+        all_playlists = []
+        playlists = self.user.current_user_playlists()
+        while playlists:
+            for playlist in playlists['items']:
+                if playlist['owner']['id'] == self.get_id():
+                    all_playlists.append(playlist)
+            if playlists['next']:
+                playlists = self.next(playlists)
+            else:
+                playlists = None
+        return all_playlists
+
+    def get_id_from_playlist(self, playlist):
+        return playlist['id']
+    
+    def get_ids_from_playlists(self, playlists):
+        return list(map(lambda x: self.get_id_from_playlist(x), playlists))
+
+    def get_all_user_owned_playlist_ids(self):
+        all_playlists = self.get_user_owned_playlists()
+        return self.get_ids_from_playlists(all_playlists)
+
+    def search_track(self):
+        track_name = input("Track: ")
+        response = self.user.search(track_name, type='track')
+        while response:
+            for track in response['tracks']['items']:
+                print(track['name'])
+                print(track['artists'][0]['name'])
+                print(track['album']['name'])
+                print('')
+                select = input("y or n? ")
+                if select == 'y':
+                    return track
+                else:
+                    pass
+            if response['tracks']['next']:
+                response = user.next(response['tracks'])
+            else:
+                response = None
+        print("Track not found.")
+        exit(1)
+
+    def get_recommendations(self, track_id):
+        recs = self.user.recommendations(seed_tracks=[track_id], limit=100, country='US')
+        return recs
+
+    def get_new_recs(self, seed_id, track_ids, num_recs):
+        recs = self.get_recommendations(seed_id)
+        new_recs = []
+        while recs:
+            for rec in recs['tracks']:
+                if len(new_recs) == num_recs:
+                    return new_recs
+                if rec['id'] in track_ids:
+                    pass
+                else:
+                    new_recs.append(rec)
+            recs = self.get_recommendations(seed_id)
+
+    def add_to_queue(self, track_list):
+        for track in track_list:
+            self.user.add_to_queue(track['id'])
+
 
                 
 

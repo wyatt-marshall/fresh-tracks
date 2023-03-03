@@ -36,6 +36,10 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.user.get_uri(), 'spotify:user:wywymarsh')
 
 
+    def test_get_all_user_owned_playlist_ids(self):
+        self.assertEqual(len(self.user.get_all_user_owned_playlist_ids()), 27)
+
+
 
 if __name__ == "__main__":
     unittest.main()
