@@ -2,10 +2,14 @@
 
 import sys
 import json
+import spotipy
 import unittest
+from dotenv import load_dotenv
+from spotipy.oauth2 import SpotifyOAuth
 
 sys.path.insert(0, "..")
 from classes.track import Track
+from classes.user import User
 
 
 class TestTrack(unittest.TestCase): 
@@ -15,7 +19,9 @@ class TestTrack(unittest.TestCase):
     f.close()
     track = Track(example_track_object)
 
-
+    load_dotenv()
+    SCOPE = "user-library-read playlist-read-private"
+    user = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=SCOPE))
 
     
     def test_get_id(self):
@@ -90,7 +96,17 @@ class TestTrack(unittest.TestCase):
 
     # turn this test off in Nov. 2023
     def test_is_saved(self):
-        self.assertTrue(self.track.is_saved())
+        self.assertTrue(self.track.is_saved(self.user))
+
+    def test_is_on_playlist(self):
+        playlist_id = '1Kze4IV7B4E1hFPDAzHeZc'
+        self.assertTrue(self.track.is_on_playlist(self.user, playlist_id))
+
+    def test_is_on_a_playlist(self):
+        self.assertTrue(self.track.is_on_a_playlist(self.user))
+
+    def test_is_on_a_user_owned_playlist(self):
+        self.assertTrue(self.track.is_on_a_user_owned_playlist(self.user))
 
 if __name__ == "__main__":
     unittest.main()

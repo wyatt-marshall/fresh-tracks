@@ -44,9 +44,7 @@ class User:
     def get_uri(self):
         return self.uri
 
-    #def user_owned_playlist(self, playlist):
-        #return self.sp.get
-
+   
     #def get_track_ids_from_playlist(self, playlist_id):
         #playlist_tracks = self.sp.playlist_tracks(playlist_id)
         #track_ids = []
@@ -59,22 +57,22 @@ class User:
                 #playlist_tracks = None
         #return track_ids
 
-     #gets track ids for all songs that are on user owned playlists
-    #def get_all_user_owned_tracks(self):
-        #playlists = self.sp.current_user_playlists()
-        #all_track_ids = []
-        #while playlists:
-            #for playlist in playlists['items']:
-                #playlist = Playlist(playlist)
-                #playlist_owner_id = playlist.get_playlist_owner_id()
-                #if playlist_owner_id == self.get_user_id():
-                    #playlist_id = playlist.get_playlist_id()
-                    #all_track_ids.extend(self.get_track_ids_from_playlist(playlist_id))
-            #if playlists['next']:
-                #playlists = self.sp.next(playlists)
-            #else:
-                #playlists = None
-        #return all_track_ids
+    # returns list of track ids for all songs that are on user owned playlists
+    def get_all_user_owned_tracks(self):
+        playlists = self.sp.current_user_playlists()
+        all_track_ids = []
+        while playlists:
+            for playlist in playlists['items']:
+                playlist = Playlist(playlist)
+                playlist_owner_id = playlist.get_playlist_owner_id()
+                if playlist_owner_id == self.get_user_id():
+                    playlist_id = playlist.get_playlist_id()
+                    all_track_ids.extend(self.get_track_ids_from_playlist(playlist_id))
+            if playlists['next']:
+                playlists = self.sp.next(playlists)
+            else:
+                playlists = None
+        return all_track_ids
 
                 
 

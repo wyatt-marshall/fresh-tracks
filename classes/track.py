@@ -104,45 +104,43 @@ class Track:
 
     # returns True if track is saved by user sp
     def is_saved(self, user):
-        #saved = user.sp.current_user_saved_tracks_contains(tracks=[self.id])[0]
-        #return saved
-        pass
+        return user.current_user_saved_tracks_contains(tracks=[self.get_id()])[0]
 
     # returns True if track is found on playlist
-    def is_track_on_playlist(self, user, playlist_id):
-        playlist_tracks = user.sp.playlist_tracks(playlist_id)
-        while playlist_tracks:
-            for playlist_track in playlist_tracks['items']:
-                if playlist_track['track']['id'] == self.get_track_id():
+    def is_on_playlist(self, user, playlist_id):
+        tracks = user.playlist_items(playlist_id, additional_types=('track',))
+        while tracks:
+            for track in tracks['items']:
+                if track['track']['id'] == self.get_id():
                     return True
-            if playlist_tracks['next']:
-                playlist_tracks = user.sp.next(playlist_tracks)
+            if tracks['next']:
+                tracks = user.next(tracks)
             else:
-                playlist_tracks = None
+                tracks = None
         return False
 
     def is_on_a_playlist(self, user):
-        playlists = user.sp.current_user_playlists()
+        playlists = user.current_user_playlists()
         while playlists:
             for playlist in playlists['items']:
                 playlist_id = playlist['id']
-                if self.is_track_on_playlist(user, playlist_id):
+                if self.is_on_playlist(user, playlist_id):
                     return True
             if playlists['next']:
-                playlists = user.sp.next(playlists)
+                playlists = user.next(playlists)
             else:
                 playlists = None
         return False
 
     def is_on_a_user_owned_playlist(self, user):
-        playlists = user.sp.current_user_playlists()
+        playlists = user.current_user_playlists()
         while playlists:
             for playlist in playlists['items']:
                 playlist_id = playlist['id']
-                if playlist['owner']['id'] == user.get_user_id() and self.is_track_on_playlist(user, playlist_id):
+                if playlist['owner']['id'] == user.me()['id'] and self.is_on_playlist(user, playlist_id):
                     return True
             if playlists['next']:
-                playlists = user.sp.next(playlisys)
+                playlists = user.sp.next(playlists)
             else:
                 playlists = None
         return False
