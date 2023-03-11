@@ -5,6 +5,7 @@ input: a spotipy user object
 
 output: User object
 """
+import random
 import spotipy
 from .playlist import Playlist
 from spotipy.oauth2 import SpotifyOAuth
@@ -112,7 +113,7 @@ class User:
                 else:
                     pass
             if response['tracks']['next']:
-                response = user.next(response['tracks'])
+                response = self.user.next(response['tracks'])
             else:
                 response = None
         print("Track not found.")
@@ -122,18 +123,36 @@ class User:
         recs = self.user.recommendations(seed_tracks=[track_id], limit=100, country='US')
         return recs
 
-    def get_new_recs(self, seed_id, track_ids, num_recs):
+    #def get_new_recs(self, seed_id, track_ids, num_recs):
+        #recs = self.get_recommendations(seed_id)
+        #new_recs = []
+        #while recs:
+            #for rec in recs['tracks']:
+                #if len(new_recs) == num_recs:
+                    #return new_recs
+                #if rec['id'] in track_ids:
+                    #pass
+                #else:
+                    #new_recs.append(rec)
+            #recs = self.get_recommendations(seed_id)
+
+    def get_some_new_recs(self, seed_id, track_ids, num_recs, percent):
         recs = self.get_recommendations(seed_id)
-        new_recs = []
+        some_new_recs = []
         while recs:
             for rec in recs['tracks']:
-                if len(new_recs) == num_recs:
-                    return new_recs
+                if len(some_new_recs) == num_recs:
+                    return some_new_recs
                 if rec['id'] in track_ids:
-                    pass
+                    chance = percent * 100
+                    num = random.randint(1, 100)
+                    if chance > num:
+                        some_new_recs.append(rec)
                 else:
-                    new_recs.append(rec)
+                    some_new_recs.append(rec)
             recs = self.get_recommendations(seed_id)
+
+
 
     def add_to_queue(self, track_list):
         for track in track_list:
